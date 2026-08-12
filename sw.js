@@ -1,4 +1,4 @@
-const CACHE_NAME = 'estate-invest-v4';
+const CACHE_NAME = 'estate-invest-v5';
 const CACHE_FILES = [
   './', './index.html', './manifest.json',
   './icon-192.png', './icon-512.png', './icon-180.png'

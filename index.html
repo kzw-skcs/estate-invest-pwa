@@ -142,6 +142,10 @@ table.cmp td:first-child,table.cmp th:first-child{text-align:left; font-weight:7
     <h3>📊 内蔵家賃相場（円/㎡/月・AI未使用時のフォールバック）</h3>
     <div id="s-market"></div>
     <div class="hint">2026年8月時点の目安（港区1K平均16万円/月・約25㎡換算等から設定）。実勢に合わせて随時修正してください。</div>
+    <h3>📉 エリア別 年間変動率（%・出口シミュレーション用）</h3>
+    <div style="display:flex; font-size:11px; color:var(--muted); gap:10px; margin-bottom:4px;"><span style="flex:1.4;"></span><span style="flex:1;">家賃/年</span><span style="flex:1;">価格/年</span></div>
+    <div id="s-trend"></div>
+    <div class="hint">保有中の家賃下落と売却価格の変動を反映する保守的な目安。プラス＝上昇。港区Aは再開発・ブランド力で微増、郊外・地方はマイナス想定。</div>
     <button class="btn btn-primary" onclick="saveSettings()">💾 保存して閉じる</button>
     <button class="btn btn-sub" onclick="closeSettings()">閉じる</button>
   </div>
@@ -387,9 +391,11 @@ function pmt(principal, ratePct, years){
 const AREA_KEYS=['A','B','C','T','M','X'];
 const AREA_NAMES={A:'港区Aクラス',B:'港区Bクラス',C:'港区Cクラス',T:'都心5区・城南城西',M:'23区・主要都市',X:'その他'};
 const DEFAULT_MARKET={A:[5600,6800],B:[4800,5800],C:[4300,5200],T:[3900,5000],M:[2800,4000],X:[1800,3000]};
+// エリア別 年間変動率%（家賃, 価格）保守的設定
+const DEFAULT_TREND={A:[0.3,1.0],B:[0.0,0.5],C:[-0.3,0.0],T:[-0.5,-0.5],M:[-1.0,-1.0],X:[-1.8,-2.0]};
 function getSettings(){
-  try{ const s=JSON.parse(localStorage.getItem('eip_settings'))||{}; s.market=s.market||JSON.parse(JSON.stringify(DEFAULT_MARKET)); s.model=s.model||'claude-sonnet-4-6'; return s; }
-  catch(e){ return {market:JSON.parse(JSON.stringify(DEFAULT_MARKET)), model:'claude-sonnet-4-6'}; }
+  try{ const s=JSON.parse(localStorage.getItem('eip_settings'))||{}; s.market=s.market||JSON.parse(JSON.stringify(DEFAULT_MARKET)); s.trend=s.trend||JSON.parse(JSON.stringify(DEFAULT_TREND)); s.model=s.model||'claude-sonnet-4-6'; return s; }
+  catch(e){ return {market:JSON.parse(JSON.stringify(DEFAULT_MARKET)), trend:JSON.parse(JSON.stringify(DEFAULT_TREND)), model:'claude-sonnet-4-6'}; }
 }
 function openSettings(){
   const s=getSettings();
@@ -400,14 +406,22 @@ function openSettings(){
       <div><input type="number" inputmode="decimal" id="m-${k}-lo" value="${s.market[k][0]}" style="padding:8px; font-size:14px;"></div>
       <div><input type="number" inputmode="decimal" id="m-${k}-hi" value="${s.market[k][1]}" style="padding:8px; font-size:14px;"></div>
     </div>`).join('');
+  $('s-trend').innerHTML=AREA_KEYS.map(k=>`
+    <div class="row" style="align-items:center; margin-bottom:6px;">
+      <div style="flex:1.4; font-size:12px;">${AREA_NAMES[k]}</div>
+      <div><input type="number" inputmode="decimal" step="0.1" id="t-${k}-r" value="${s.trend[k][0]}" style="padding:8px; font-size:14px;"></div>
+      <div><input type="number" inputmode="decimal" step="0.1" id="t-${k}-p" value="${s.trend[k][1]}" style="padding:8px; font-size:14px;"></div>
+    </div>`).join('');
   $('settings').classList.add('open');
 }
 function saveSettings(){
   const s=getSettings();
   s.apiKey=$('s-apikey').value.trim(); s.model=$('s-model').value;
   AREA_KEYS.forEach(k=>{ s.market[k]=[num(`m-${k}-lo`)||DEFAULT_MARKET[k][0], num(`m-${k}-hi`)||DEFAULT_MARKET[k][1]]; });
+  AREA_KEYS.forEach(k=>{ const r=parseFloat($(`t-${k}-r`).value), p=parseFloat($(`t-${k}-p`).value);
+    s.trend[k]=[isNaN(r)?DEFAULT_TREND[k][0]:r, isNaN(p)?DEFAULT_TREND[k][1]:p]; });
   localStorage.setItem('eip_settings', JSON.stringify(s));
-  closeSettings();
+  closeSettings(); if(document.getElementById('page-result').classList.contains('active')) renderResult();
 }
 function closeSettings(){ $('settings').classList.remove('open'); }
 
@@ -782,6 +796,52 @@ function calcProp(p, profile){
 function mk2(n,s,d){ return {n,s,d}; }
 function vBadge(v){ return v==='妥当'||v==='割安'?'b-ok':(v==='やや割高'?'b-warn':'b-ng'); }
 
+/* ================= 出口シミュレーション（トータル損益） ================= */
+function getHoldY(){ return parseInt(localStorage.getItem('eip_holdY'))||10; }
+function setHoldY(v){ localStorage.setItem('eip_holdY', v); renderResult(); }
+// ローン残高（元利均等・m回返済後）
+function loanBalance(L, ratePct, years, paidYears){
+  if(L<=0) return 0;
+  const r=ratePct/100/12, n=years*12, m=Math.min(paidYears*12,n);
+  if(r===0) return L*(1-m/n);
+  return L*(Math.pow(1+r,n)-Math.pow(1+r,m))/(Math.pow(1+r,n)-1);
+}
+function totalSim(p, c){
+  const holdY=getHoldY();
+  const tr=getSettings().trend[p.area]||DEFAULT_TREND[p.area];
+  const rentTrend=tr[0]/100, priceTrend=tr[1]/100;
+  const baseRent=(c.rentCheck&&c.rentCheck.fair)? c.rentCheck.fair : p.rent;   // 妥当家賃ベース
+  let cumCF=0;
+  for(let y=1;y<=holdY;y++){
+    const rentY=baseRent*Math.pow(1+rentTrend,y);
+    const cfY=(rentY*(1-p.vac/100) - p.mfee - rentY*p.pmpct/100 - p.tax/12 - c.mPay)*12;
+    cumCF+=cfY;
+  }
+  const salePrice=p.price*Math.pow(1+priceTrend,holdY);
+  const saleCost=salePrice*0.03;                       // 仲介手数料等
+  const balance=loanBalance(c.loanAmt,p.rate,p.years,holdY);
+  const acqCost=p.price*(1+p.cost/100);
+  const gain=salePrice-saleCost-acqCost;               // 減価償却は未考慮（保守側でない点に注意喚起）
+  const taxRate=holdY>5?0.20315:0.3963;
+  const saleTax=gain>0? gain*taxRate:0;
+  const saleNet=salePrice-saleCost-balance-saleTax;    // 売却手残り
+  const invested=p.down+p.price*p.cost/100;            // 投下自己資金
+  const total=cumCF+saleNet-invested;                  // トータル損益
+  return {holdY,rentTrend:tr[0],priceTrend:tr[1],baseRent,cumCF,salePrice,saleCost,balance,saleTax,taxRate,saleNet,invested,total};
+}
+function renderTotalSim(p,c){
+  const t=totalSim(p,c);
+  const col=v=>v>=0?'var(--green)':'var(--red)';
+  return `<h3>📈 出口シミュレーション（保有${t.holdY}年・妥当家賃ベース）</h3>
+    <div class="metric"><span>累計キャッシュフロー（家賃変動${t.rentTrend>=0?'+':''}${t.rentTrend}%/年）</span><b style="color:${col(t.cumCF)}">${t.cumCF>=0?'+':'−'}${fmt(Math.abs(t.cumCF),0)} 万円</b></div>
+    <div class="metric"><span>想定売却価格（価格変動${t.priceTrend>=0?'+':''}${t.priceTrend}%/年）</span><b>${fmt(t.salePrice,0)} 万円</b></div>
+    <div class="metric"><span>売却時ローン残高</span><b>−${fmt(t.balance,0)} 万円</b></div>
+    <div class="metric"><span>売却費用（3%）＋譲渡税（${(t.taxRate*100).toFixed(1)}%・概算）</span><b>−${fmt(t.saleCost+t.saleTax,0)} 万円</b></div>
+    <div class="metric"><span>投下自己資金（頭金＋諸経費）</span><b>−${fmt(t.invested,0)} 万円</b></div>
+    <div class="metric"><span><b>トータル損益</b></span><b style="font-size:17px; color:${col(t.total)}">${t.total>=0?'+':'−'}${fmt(Math.abs(t.total),0)} 万円</b></div>
+    <div class="hint">エリア別変動率は⚙️設定で編集可。譲渡税は減価償却の取戻し（取得費減少）を未考慮のため実際はやや重くなります。保有5年以下は短期譲渡39.63%で自動計算。</div>`;
+}
+
 /* ================= 判定タブ描画 ================= */
 function renderResult(){
   const props=getProps(); const profile=getProfile(); const el=$('r-body');
@@ -790,7 +850,12 @@ function renderResult(){
     return;
   }
   const hasKey=!!getSettings().apiKey;
-  let html='';
+  const hy=getHoldY();
+  let html=`<div class="card" style="padding:10px 16px;"><div style="display:flex; align-items:center; gap:10px;">
+    <span style="font-size:13px; font-weight:700; color:var(--navy);">📈 出口シミュの保有年数</span>
+    <select style="flex:1; padding:8px;" onchange="setHoldY(this.value)">
+      ${[5,7,10,15,20].map(y=>`<option value="${y}" ${y===hy?'selected':''}>${y}年${y<=5?'（短期譲渡税39.63%）':''}</option>`).join('')}
+    </select></div></div>`;
   if(!profile) html+='<div class="card"><div class="hint">⚠️ 財務状況が未入力です。「💰 財務」タブで保存すると融資判定が表示されます。</div></div>';
   props.forEach(p=>{
     const c=calcProp(p,profile);
@@ -813,6 +878,7 @@ function renderResult(){
       ${renderCfBreakdown(p,c)}
       ${renderBankCompare(p)}
       ${c.fin? renderFin(c):''}
+      ${renderTotalSim(p,c)}
       ${renderExit(p)}
       ${renderAction(c,p,profile)}
       <div class="prop-actions">
@@ -909,16 +975,20 @@ function renderAction(c,p,profile){
   return `<h3>🧭 推奨アクション</h3><div class="action-box">${a.map(x=>'・'+x).join('<br>')}</div>`;
 }
 function renderCompare(props,profile){
+  const hy=getHoldY();
   let rows=props.map(p=>{
     const c=calcProp(p,profile);
+    const t=totalSim(p,c);
     return `<tr><td>${esc(p.name.length>8?p.name.slice(0,8)+'…':p.name)}</td>
-      <td>${fmt(p.price,0)}</td><td>${c.net.toFixed(2)}%</td>
-      <td>${c.fairY? c.fairY.net.toFixed(2)+'%':'—'}</td>
+      <td>${fmt(p.price,0)}</td>
+      <td>${c.fairY? c.fairY.net.toFixed(2)+'%':c.net.toFixed(2)+'%'}</td>
       <td style="color:${(c.fairCf??c.cfMonthly)>=0?'var(--green)':'var(--red)'}">${fmt((c.fairCf??c.cfMonthly)*10000,0)}</td>
+      <td style="color:${t.total>=0?'var(--green)':'var(--red)'}; font-weight:700;">${t.total>=0?'+':'−'}${fmt(Math.abs(t.total),0)}</td>
       <td>${c.score}/10</td></tr>`;
   }).join('');
   return `<div class="card"><h2>⚖️ 物件比較</h2><table class="cmp">
-    <tr><th>物件</th><th>価格(万)</th><th>実質(広告)</th><th>実質(妥当)</th><th>月CF(円)</th><th>スコア</th></tr>${rows}</table></div>`;
+    <tr><th>物件</th><th>価格(万)</th><th>実質利回り</th><th>月CF(円)</th><th>${hy}年損益(万)</th><th>スコア</th></tr>${rows}</table>
+    <div class="hint">「${hy}年損益」＝累計CF＋売却手残り−投下自己資金（妥当家賃・エリア別変動率ベース）。CFと出口を合算した最終判断用の1つの数字です。</div></div>`;
 }
 
 /* ================= タブ ================= */
