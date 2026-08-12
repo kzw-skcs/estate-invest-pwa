@@ -228,6 +228,16 @@ table.cmp td:first-child,table.cmp th:first-child{text-align:left; font-weight:7
       <div><label>築年（西暦）</label><input type="number" inputmode="decimal" id="p-built" placeholder="2008"></div>
       <div><label>専有面積（㎡）</label><input type="number" inputmode="decimal" step="0.1" id="p-sqm" placeholder="25"></div>
     </div>
+    <label>構造（法定耐用年数）</label>
+    <select id="p-struct">
+      <option value="SRC">SRC造・鉄骨鉄筋コンクリート（47年）</option>
+      <option value="RC" selected>RC造・鉄筋コンクリート（47年）</option>
+      <option value="S34">重量鉄骨造・肉厚4mm超（34年）</option>
+      <option value="S27">軽量鉄骨造・3mm超4mm以下（27年）</option>
+      <option value="S19">軽量鉄骨造・3mm以下（19年）</option>
+      <option value="W">木造（22年）</option>
+    </select>
+    <div class="hint">分譲マンションの区分は通常RC造またはSRC造（タワー・大型）。残存耐用年数から出口戦略の売却タイミングを逆算します。</div>
   </div>
   <div class="card">
     <h2>💴 価格・収支</h2>
@@ -277,6 +287,19 @@ table.cmp td:first-child,table.cmp th:first-child{text-align:left; font-weight:7
     <div class="check-item"><div class="mark">🏗</div><div class="t"><b>新耐震基準（1981年6月以降）</b><span>実務上は1983年以降の竣工なら確実。</span></div></div>
     <div class="check-item"><div class="mark">📅</div><div class="t"><b>築15〜25年</b><span>新築プレミアムが剥げ落ち、価格が最も安定する帯。</span></div></div>
     <div class="check-item"><div class="mark">🚪</div><div class="t"><b>出口戦略が取れるエリア</b><span>港区A/Bクラス等、ローン残高を上回る価格で売れる立地。</span></div></div>
+  </div>
+  <div class="card">
+    <h2>🏗 構造別 法定耐用年数と出口の考え方</h2>
+    <table class="cmp">
+      <tr><th>構造</th><th>耐用年数</th><th>主な用途</th></tr>
+      <tr><td>SRC造</td><td>47年</td><td>タワー・大型分譲</td></tr>
+      <tr><td>RC造</td><td>47年</td><td>分譲マンション区分の標準</td></tr>
+      <tr><td>重量鉄骨(4mm超)</td><td>34年</td><td>中規模マンション・ビル</td></tr>
+      <tr><td>軽量鉄骨(3-4mm)</td><td>27年</td><td>ハウスメーカー系アパート</td></tr>
+      <tr><td>軽量鉄骨(3mm以下)</td><td>19年</td><td>同上（薄鋼材）</td></tr>
+      <tr><td>木造</td><td>22年</td><td>アパート・戸建</td></tr>
+    </table>
+    <p style="margin-top:8px;">銀行は買い手の融資期間を「残存耐用年数以内」に制限するのが一般的。<b>RC造は築17年までなら次の買い手が30年ローンを組める</b>ため流動性が高く、出口で強い。築15〜25年で買い、2回目の大規模修繕（築24〜30年）と残存30年割れの前に売るのが王道です。判定タブに物件ごとの逆算スケジュールを表示します。</p>
   </div>
   <div class="card">
     <h2>⚠️ 想定家賃の「かさ増し」に注意</h2>
@@ -476,7 +499,7 @@ let editId=null;
 function readPropForm(){
   const old=editId? getProps().find(x=>x.id===editId) : null;
   return { id:editId||Date.now(), name:$('p-name').value||'（無題の物件）', area:$('p-area').value,
-    walk:num('p-walk'), built:num('p-built'), sqm:num('p-sqm'),
+    walk:num('p-walk'), built:num('p-built'), sqm:num('p-sqm'), struct:$('p-struct').value,
     price:num('p-price'), rent:num('p-rent'), mfee:num('p-mfee'), tax:num('p-tax'),
     pmpct:num('p-pmpct'), vac:num('p-vac'), cost:num('p-cost'),
     down:num('p-down'), rate:num('p-rate'), years:num('p-years'),
@@ -494,14 +517,14 @@ function saveProp(){
 function clearPropForm(){
   ['p-name','p-walk','p-built','p-sqm','p-price','p-rent','p-mfee','p-tax','p-url','p-text'].forEach(id=>$(id).value='');
   $('p-pmpct').value=5; $('p-vac').value=10; $('p-cost').value=7;
-  $('p-down').value=0; $('p-rate').value=1.8; $('p-years').value=35; $('p-area').value='A'; $('p-bank').value='';
+  $('p-down').value=0; $('p-rate').value=1.8; $('p-years').value=35; $('p-area').value='A'; $('p-bank').value=''; $('p-struct').value='RC';
   $('ai-status').innerHTML='';
 }
 function editProp(id){
   const p=getProps().find(x=>x.id===id); if(!p) return;
   editId=id;
   $('p-name').value=p.name; $('p-area').value=p.area; $('p-walk').value=p.walk||'';
-  $('p-built').value=p.built||''; $('p-sqm').value=p.sqm||''; $('p-price').value=p.price;
+  $('p-built').value=p.built||''; $('p-sqm').value=p.sqm||''; $('p-struct').value=p.struct||'RC'; $('p-price').value=p.price;
   $('p-rent').value=p.rent; $('p-mfee').value=p.mfee||''; $('p-tax').value=p.tax||'';
   $('p-pmpct').value=p.pmpct; $('p-vac').value=p.vac; $('p-cost').value=p.cost;
   $('p-down').value=p.down; $('p-rate').value=p.rate; $('p-years').value=p.years;
@@ -592,6 +615,7 @@ const AI_SCHEMA=`{
  "mfee": 管理費と修繕積立金の合計_万円每月(number|null), "tax": 固定資産税都市計画税_万円每年_推計可(number|null),
  "walk": 駅徒歩_分(number|null), "built": 築年_西暦(number|null), "sqm": 専有面積_平米(number|null),
  "area_class": "A"|"B"|"C"|"T"|"M"|"X",
+ "struct": "SRC"|"RC"|"S34"|"S27"|"S19"|"W" (SRC=鉄骨鉄筋コンクリート, RC=鉄筋コンクリート, S34=重量鉄骨4mm超, S27=軽量鉄骨3-4mm, S19=軽量鉄骨3mm以下, W=木造。分譲マンションは通常RC/SRC),
  "pmpct": 賃貸管理料_家賃比パーセント_推計(number), "vac": 想定空室率_パーセント_推計(number), "cost": 購入諸経費率_パーセント_推計(number),
  "fair_rent": 周辺実勢に基づく妥当家賃_万円每月(number|null), "fair_rent_range": [下限,上限]|null,
  "rent_verdict": "妥当"|"やや割高"|"かさ増しの疑い"|"割安"|null, "rent_note": 判定根拠_周辺相場の具体例含む_200字以内(string|null)
@@ -619,6 +643,7 @@ function applyAiResult(j){
   const set=(id,v)=>{ if(v!=null && v!=='' && !isNaN(v)) $(id).value=Math.round(v*100)/100; };
   if(j.name) $('p-name').value=j.name;
   if(j.area_class && AREA_KEYS.includes(j.area_class)) $('p-area').value=j.area_class;
+  if(j.struct && ['SRC','RC','S34','S27','S19','W'].includes(j.struct)) $('p-struct').value=j.struct;
   set('p-price',j.price); set('p-rent',j.rent); set('p-mfee',j.mfee); set('p-tax',j.tax);
   set('p-walk',j.walk); set('p-built',j.built); set('p-sqm',j.sqm);
   set('p-pmpct',j.pmpct); set('p-vac',j.vac); set('p-cost',j.cost);
@@ -645,6 +670,51 @@ async function aiCheckRent(id){
     alert('AI査定エラー: '+e.message);
     if(el){ el.disabled=false; el.textContent='🔍 AI家賃査定'; }
   }
+}
+
+/* ================= 構造・耐用年数・出口戦略 ================= */
+const LIFE={SRC:47,RC:47,S34:34,S27:27,S19:19,W:22};
+const STRUCT_NAMES={SRC:'SRC造',RC:'RC造',S34:'重量鉄骨造',S27:'軽量鉄骨造(3-4mm)',S19:'軽量鉄骨造(3mm以下)',W:'木造'};
+function exitPlan(p){
+  if(!p.built) return null;
+  const nowY=new Date().getFullYear();
+  const life=LIFE[p.struct||'RC'];
+  const age=nowY-p.built;
+  const remain=Math.max(0,life-age);
+  // 買い手ローン期限：多くの金融機関は「融資期間 ≦ 残存耐用年数」
+  const y35=p.built+life-35;   // 買い手が35年ローンを組める最終年
+  const y30=p.built+life-30;   // 30年ローン
+  const y25=p.built+life-25;   // 25年ローン
+  // 大規模修繕（周期12〜15年・中央13年で表示）
+  const rep=[1,2,3].map(i=>({n:i, from:p.built+i*12, to:p.built+i*15, mid:p.built+i*13}));
+  const nextRep=rep.find(r=>r.to>=nowY)||null;
+  // 譲渡税：取得から譲渡年1月1日時点で5年超→長期20.315%（実務上は購入から約6年目以降）
+  const longTermY=nowY+6;
+  // 推奨売却期限：2回目大規模修繕の最速想定 or 買い手25年ローン期限（実務基準）の早い方
+  const rep2=p.built+24;
+  const sellDeadline=Math.min(rep2, y25);
+  const sellFrom=Math.max(longTermY, nowY+1);
+  return {life, age, remain, y35, y30, y25, rep, nextRep, longTermY, sellFrom, sellDeadline, nowY};
+}
+function renderExit(p){
+  const e=exitPlan(p);
+  if(!e) return '<h3>🚪 出口戦略</h3><div class="hint">築年を入力すると耐用年数・売却タイミングを表示します。</div>';
+  const remB=e.remain>=30?'b-ok':(e.remain>=20?'b-warn':'b-ng');
+  const dl=e.sellDeadline;
+  let windowMsg, winB;
+  if(dl<e.nowY){ windowMsg=`推奨期限（${dl}年）を経過。買い手の融資年数短縮（現金・富裕層需要中心）を織り込んだ価格設定に`; winB='b-ng'; }
+  else if(dl<e.sellFrom){ windowMsg=`〜${dl}年（長期譲渡税化（${e.longTermY}年）前の売却となるため税率39.63%を織り込んで判断）`; winB='b-warn'; }
+  else if(dl-e.sellFrom<=2){ windowMsg=`${e.sellFrom}〜${dl}年（ウィンドウが狭い・要計画的売却）`; winB='b-warn'; }
+  else{ windowMsg=`${e.sellFrom}〜${dl}年`; winB='b-ok'; }
+  return `<h3>🚪 出口戦略（${STRUCT_NAMES[p.struct||'RC']}・法定耐用年数${e.life}年）</h3>
+    <div class="metric"><span>残存耐用年数</span><b><span class="badge ${remB}">${e.remain}年</span></b></div>
+    <div class="metric"><span>買い手が35年ローンを組める期限</span><b>${e.y35>=e.nowY? e.y35+'年まで':'<span class="badge b-ng">経過</span>'}</b></div>
+    <div class="metric"><span>買い手が30年ローンを組める期限</span><b>${e.y30>=e.nowY? e.y30+'年まで':'<span class="badge b-ng">経過</span>'}</b></div>
+    <div class="metric"><span>買い手が25年ローンを組める期限</span><b>${e.y25>=e.nowY? e.y25+'年まで':'<span class="badge b-ng">経過</span>'}</b></div>
+    <div class="metric"><span>大規模修繕（12〜15年周期）</span><b style="font-size:12px;">1回目 ${e.rep[0].from}〜${e.rep[0].to}年<br>2回目 ${e.rep[1].from}〜${e.rep[1].to}年<br>3回目 ${e.rep[2].from}〜${e.rep[2].to}年</b></div>
+    <div class="metric"><span>譲渡税が長期（20.315%）になる目安</span><b>${e.longTermY}年以降</b></div>
+    <div class="metric"><span>推奨売却ウィンドウ</span><b><span class="badge ${winB}" style="font-size:12px;">${windowMsg}</span></b></div>
+    <div class="hint">ロジック：①多くの銀行は買い手の融資期間を「残存耐用年数以内」に制限するため、少なくとも25年ローンが組めるうちに売る（30〜35年組めればなお強い） ②2回目の大規模修繕（修繕積立金値上げ・一時金リスク）前に売る ③取得後5年超（1/1判定）で譲渡税が39.63%→20.315%に下がるのを待つ——の3条件から逆算。※銀行によっては「55年−築年数」等の緩い基準もあり、港区一等地は現金買いの需要も厚いため、期限超過＝売れないではありません。</div>`;
 }
 
 /* ================= 計算 ================= */
@@ -740,8 +810,10 @@ function renderResult(){
       ${c.fairCf!=null?`<div class="metric"><span>妥当家賃ベース</span><b style="color:${c.fairCf>=0?'var(--green)':'var(--red)'}">${c.fairCf>=0?'+':''}${fmt(c.fairCf*10000,0)} 円/月</b></div>`:''}
       <div class="metric"><span>ストレス時（空室20%・金利+1%）</span><b style="color:${c.cfStress>=0?'var(--green)':'var(--red)'}">${c.cfStress>=0?'+':''}${fmt(c.cfStress*10000,0)} 円/月</b></div>
       <div class="metric"><span>ローン返済（${esc(bankName(p))}）</span><b>${fmt(c.mPay*10000,0)} 円/月</b></div>
+      ${renderCfBreakdown(p,c)}
       ${renderBankCompare(p)}
       ${c.fin? renderFin(c):''}
+      ${renderExit(p)}
       ${renderAction(c,p,profile)}
       <div class="prop-actions">
         ${hasKey?`<button class="btn-sm btn-ai" id="aiRentBtn-${p.id}" onclick="aiCheckRent(${p.id})">🔍 AI家賃査定</button>`:''}
@@ -753,6 +825,28 @@ function renderResult(){
   if(props.length>=2) html+=renderCompare(props,profile);
   html+='<div class="disclaimer">※ 一般的な目安・AI解析に基づくシミュレーションです。金融・投資アドバイスではありません。AI査定には誤りが含まれる場合があります。購入前に必ずレントロール（実際の賃料）と重要事項を確認してください。</div>';
   el.innerHTML=html;
+}
+function renderCfBreakdown(p,c){
+  const yen=v=>`${v<0?'−':''}${fmt(Math.abs(v)*10000,0)}円`;
+  const full=p.rent, vacLoss=-p.rent*(p.vac/100), pmf=-p.rent*p.pmpct/100, taxM=-p.tax/12, mf=-p.mfee, loan=-c.mPay;
+  // CF±0となる頭金（元利均等の逆算）
+  const avail=p.rent*(1-p.vac/100)-p.mfee-p.rent*p.pmpct/100-p.tax/12;   // 返済に充てられる月額
+  let beDown=null;
+  if(c.mPay>0 && avail>0){
+    const maxLoan=Math.max(0, c.loanAmt*avail/c.mPay);
+    beDown=Math.max(0, p.price-maxLoan);
+  }
+  return `<details style="margin:6px 0;"><summary style="font-size:12px; color:var(--muted); cursor:pointer;">🧾 CF計算の内訳を表示</summary>
+    <div style="font-size:12px; padding:8px 0 0 8px;">
+      <div class="metric"><span>満室想定家賃</span><b style="font-size:13px;">+${fmt(full*10000,0)}円</b></div>
+      <div class="metric"><span>空室損（${p.vac}%）</span><b style="font-size:13px;">${yen(vacLoss)}</b></div>
+      <div class="metric"><span>管理費・修繕積立金</span><b style="font-size:13px;">${yen(mf)}</b></div>
+      <div class="metric"><span>賃貸管理料（${p.pmpct}%）</span><b style="font-size:13px;">${yen(pmf)}</b></div>
+      <div class="metric"><span>固定資産税等（月割）</span><b style="font-size:13px;">${yen(taxM)}</b></div>
+      <div class="metric"><span>ローン返済</span><b style="font-size:13px;">${yen(loan)}</b></div>
+      <div class="metric"><span><b>月次CF合計</b></span><b style="font-size:13px; color:${c.cfMonthly>=0?'var(--green)':'var(--red)'}">${c.cfMonthly>=0?'+':''}${fmt(c.cfMonthly*10000,0)}円</b></div>
+      ${beDown!=null && c.cfMonthly<0? `<div class="hint">💡 CF±0にするには頭金 約${fmt(Math.ceil(beDown/10)*10,0)}万円（価格の${(beDown/p.price*100).toFixed(0)}%）が必要（現条件${p.rate}%/${p.years}年の場合）。</div>`:''}
+    </div></details>`;
 }
 function bankName(p){
   if(!p.bankId) return `${p.rate}%/${p.years}年`;
