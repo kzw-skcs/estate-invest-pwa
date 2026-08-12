@@ -13,39 +13,44 @@
 :root{
   --navy:#1a2b4a; --navy-dark:#0d1626; --gold:#c9a94e; --green:#2e9e6f; --green-l:#4ecb8f;
   --red:#d9534f; --orange:#e8963c; --bg:#f2f4f7; --card:#ffffff; --text:#22314f; --muted:#7a869c;
-  --border:#e2e6ee;
+  --border:#e2e6ee; --ai:#6a5acd;
 }
 *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
 body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif; background:var(--bg); color:var(--text); font-size:15px; padding-bottom:calc(70px + env(safe-area-inset-bottom,0px));}
-header{position:sticky; top:0; z-index:50; background:var(--navy); color:#fff; padding:calc(12px + env(safe-area-inset-top,0px)) 16px 12px; display:flex; align-items:center; justify-content:space-between;}
-header h1{font-size:16px; font-weight:700;}
-header .sub{font-size:11px; color:#b8c3d9;}
-.upd-btn{background:rgba(255,255,255,.15); color:#fff; border:none; border-radius:8px; padding:8px 12px; font-size:12px; cursor:pointer;}
+header{position:sticky; top:0; z-index:50; background:var(--navy); color:#fff; padding:calc(12px + env(safe-area-inset-top,0px)) 16px 12px; display:flex; align-items:center; justify-content:space-between; gap:8px;}
+header h1{font-size:15px; font-weight:700;}
+header .sub{font-size:10px; color:#b8c3d9;}
+.hbtn{background:rgba(255,255,255,.15); color:#fff; border:none; border-radius:8px; padding:8px 10px; font-size:12px; cursor:pointer; white-space:nowrap;}
 main{padding:14px; max-width:640px; margin:0 auto;}
 .tab-page{display:none;}
 .tab-page.active{display:block; animation:fade .18s ease;}
 @keyframes fade{from{opacity:0; transform:translateY(4px);}to{opacity:1; transform:none;}}
 .card{background:var(--card); border-radius:14px; padding:16px; margin-bottom:14px; box-shadow:0 1px 3px rgba(20,30,60,.06);}
-.card h2{font-size:15px; margin-bottom:12px; color:var(--navy); display:flex; align-items:center; gap:6px;}
+.card h2{font-size:15px; margin-bottom:12px; color:var(--navy); display:flex; align-items:center; gap:6px; flex-wrap:wrap;}
 .card h3{font-size:13px; margin:14px 0 8px; color:var(--navy);}
 label{display:block; font-size:12px; color:var(--muted); margin:10px 0 4px;}
-input[type=number],input[type=text],select{width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:16px; background:#fafbfd; color:var(--text);}
-input:focus,select:focus{outline:2px solid var(--gold); border-color:var(--gold);}
+input[type=number],input[type=text],input[type=password],select,textarea{width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:16px; background:#fafbfd; color:var(--text); font-family:inherit;}
+textarea{min-height:90px; font-size:13px;}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--gold); border-color:var(--gold);}
 .row{display:flex; gap:10px;}
 .row>div{flex:1;}
 .btn{display:block; width:100%; padding:14px; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; margin-top:14px;}
 .btn-primary{background:var(--navy); color:#fff;}
 .btn-gold{background:var(--gold); color:#fff;}
+.btn-ai{background:var(--ai); color:#fff;}
 .btn-sub{background:#e9edf4; color:var(--navy); font-weight:600;}
 .btn-danger{background:#fdecec; color:var(--red);}
+.btn-sm{padding:9px; font-size:12px; border:none; border-radius:8px; cursor:pointer;}
+.btn:disabled{opacity:.5;}
 .hint{font-size:11px; color:var(--muted); margin-top:4px; line-height:1.5;}
 .badge{display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;}
 .b-ok{background:#e3f6ec; color:var(--green);}
 .b-warn{background:#fdf3e3; color:var(--orange);}
 .b-ng{background:#fdecec; color:var(--red);}
-.metric{display:flex; justify-content:space-between; align-items:baseline; padding:9px 0; border-bottom:1px dashed var(--border); font-size:13px;}
+.b-ai{background:#efeafd; color:var(--ai);}
+.metric{display:flex; justify-content:space-between; align-items:baseline; padding:9px 0; border-bottom:1px dashed var(--border); font-size:13px; gap:8px;}
 .metric:last-child{border-bottom:none;}
-.metric b{font-size:16px;}
+.metric b{font-size:15px; text-align:right;}
 .big-yield{text-align:center; padding:12px 0 6px;}
 .big-yield .v{font-size:38px; font-weight:800;}
 .big-yield .l{font-size:12px; color:var(--muted);}
@@ -56,11 +61,8 @@ input:focus,select:focus{outline:2px solid var(--gold); border-color:var(--gold)
 .check-item .t span{font-size:11px; color:var(--muted);}
 .score-bar{height:12px; background:#e9edf4; border-radius:8px; overflow:hidden; margin:8px 0 4px;}
 .score-bar>div{height:100%; border-radius:8px; transition:width .4s;}
-.prop-card{border:1px solid var(--border); border-radius:12px; padding:12px 14px; margin-bottom:10px; cursor:pointer; background:#fafbfd;}
-.prop-card .name{font-weight:700; font-size:14px; display:flex; justify-content:space-between; align-items:center;}
-.prop-card .meta{font-size:11px; color:var(--muted); margin-top:3px;}
 .prop-actions{display:flex; gap:8px; margin-top:10px;}
-.prop-actions button{flex:1; padding:9px; font-size:12px; border:none; border-radius:8px; cursor:pointer;}
+.prop-actions button{flex:1;}
 .nav{position:fixed; bottom:0; left:0; right:0; background:#fff; border-top:1px solid var(--border); display:flex; z-index:60; padding-bottom:env(safe-area-inset-bottom,0px);}
 .nav button{flex:1; padding:10px 0 8px; background:none; border:none; font-size:10px; color:var(--muted); cursor:pointer; min-height:56px;}
 .nav button .ico{display:block; font-size:21px; margin-bottom:2px;}
@@ -73,6 +75,12 @@ table.cmp td:first-child,table.cmp th:first-child{text-align:left; font-weight:7
 .guide p{font-size:13px; line-height:1.8; margin-bottom:8px;}
 .guide li{font-size:13px; line-height:1.8; margin-left:18px; margin-bottom:4px;}
 .action-box{border-left:4px solid var(--gold); background:#fdf9ef; padding:12px; border-radius:0 10px 10px 0; font-size:13px; line-height:1.7; margin:10px 0;}
+.ai-box{border-left:4px solid var(--ai); background:#f6f3fe; padding:12px; border-radius:0 10px 10px 0; font-size:13px; line-height:1.7; margin:10px 0;}
+.bank-item{border:1px solid var(--border); border-radius:10px; padding:10px 12px; margin-bottom:8px; background:#fafbfd; font-size:13px;}
+.bank-item .bn{font-weight:700; display:flex; justify-content:space-between; align-items:center;}
+.bank-item .bm{font-size:11px; color:var(--muted); margin-top:2px;}
+.spinner{display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top-color:transparent; border-radius:50%; animation:spin .7s linear infinite; vertical-align:-2px; margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg);}}
 /* PIN lock */
 #lock{position:fixed; inset:0; background:var(--navy-dark); z-index:200; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;}
 #lock img{width:84px; height:84px; border-radius:20px;}
@@ -85,6 +93,10 @@ table.cmp td:first-child,table.cmp th:first-child{text-align:left; font-weight:7
 #pin-pad button:active{background:var(--gold);}
 #pin-err{color:#ff8f8f; font-size:12px; height:16px;}
 .empty{color:var(--muted); font-size:13px; text-align:center; padding:20px 0; line-height:1.7;}
+/* settings modal */
+#settings{position:fixed; inset:0; background:rgba(13,22,38,.6); z-index:100; display:none; overflow-y:auto; padding:20px 14px calc(20px + env(safe-area-inset-bottom,0px));}
+#settings.open{display:block;}
+#settings .inner{max-width:640px; margin:0 auto;}
 </style>
 </head>
 <body>
@@ -106,10 +118,34 @@ table.cmp td:first-child,table.cmp th:first-child{text-align:left; font-weight:7
 <header>
   <div>
     <h1>🏢 負けない不動産投資プランナー</h1>
-    <div class="sub">港区Aクラス・中古1K〜1LDK戦略</div>
+    <div class="sub">港区Aクラス・中古1K〜1LDK戦略 v2</div>
   </div>
-  <button class="upd-btn" onclick="updateApp()">🔄 更新</button>
+  <div style="display:flex; gap:6px;">
+    <button class="hbtn" onclick="openSettings()">⚙️</button>
+    <button class="hbtn" onclick="updateApp()">🔄</button>
+  </div>
 </header>
+
+<!-- ============ SETTINGS ============ -->
+<div id="settings"><div class="inner">
+  <div class="card">
+    <h2>⚙️ 設定</h2>
+    <h3>🤖 Claude API（AI解析用）</h3>
+    <label>APIキー（この端末のみに保存されます）</label>
+    <input type="password" id="s-apikey" placeholder="sk-ant-...">
+    <label>モデル</label>
+    <select id="s-model">
+      <option value="claude-sonnet-4-6">claude-sonnet-4-6（推奨）</option>
+      <option value="claude-haiku-4-5-20251001">claude-haiku-4-5（低コスト）</option>
+    </select>
+    <div class="hint">キーはコードに埋め込まれず、この端末のlocalStorageのみに保存。APIコンソールで月額上限の設定を推奨。未設定でもテキスト貼り付け解析＋内蔵相場で動作します。</div>
+    <h3>📊 内蔵家賃相場（円/㎡/月・AI未使用時のフォールバック）</h3>
+    <div id="s-market"></div>
+    <div class="hint">2026年8月時点の目安（港区1K平均16万円/月・約25㎡換算等から設定）。実勢に合わせて随時修正してください。</div>
+    <button class="btn btn-primary" onclick="saveSettings()">💾 保存して閉じる</button>
+    <button class="btn btn-sub" onclick="closeSettings()">閉じる</button>
+  </div>
+</div></div>
 
 <main>
 
@@ -139,7 +175,19 @@ table.cmp td:first-child,table.cmp th:first-child{text-align:left; font-weight:7
     <h2>📉 その他の借入（任意）</h2>
     <label>年間返済額の合計（万円/年）</label>
     <input type="number" inputmode="decimal" id="f-otherDebt" placeholder="0">
-    <div class="hint">既存の投資用ローン・カーローンなどがあれば年間返済額を入力。</div>
+  </div>
+  <div class="card">
+    <h2>🏦 銀行リスト（融資条件プリセット）</h2>
+    <div id="f-banks"></div>
+    <h3>銀行を追加・編集</h3>
+    <input type="hidden" id="b-id">
+    <label>銀行名</label><input type="text" id="b-name" placeholder="例：オリックス銀行">
+    <div class="row">
+      <div><label>金利（%）</label><input type="number" inputmode="decimal" step="0.01" id="b-rate" placeholder="1.8"></div>
+      <div><label>期間（年）</label><input type="number" inputmode="decimal" id="b-years" placeholder="35"></div>
+    </div>
+    <label>メモ（審査状況・条件など）</label><input type="text" id="b-memo" placeholder="例：事前審査OK・頭金1割条件">
+    <button class="btn btn-sub" onclick="saveBank()">🏦 銀行を保存</button>
   </div>
   <button class="btn btn-primary" onclick="saveProfile()">💾 財務状況を保存</button>
   <div id="f-summary"></div>
@@ -147,6 +195,17 @@ table.cmp td:first-child,table.cmp th:first-child{text-align:left; font-weight:7
 
 <!-- ============ TAB 2: 物件入力 ============ -->
 <section id="page-prop" class="tab-page">
+  <div class="card">
+    <h2>🤖 AI自動入力 <span class="badge b-ai">Claude API</span></h2>
+    <label>物件URL（SUUMO・楽待・健美家など）</label>
+    <input type="text" id="p-url" placeholder="https://...">
+    <button class="btn btn-ai" id="ai-url-btn" onclick="aiAnalyzeUrl()">🤖 URLから自動解析（家賃妥当性チェック込み）</button>
+    <div class="hint">Claude APIがページを取得・解析し、各項目を自動入力。同時に周辺相場を検索して家賃のかさ増しを判定します。サイト側にブロックされた場合は下のテキスト貼り付けをご利用ください。</div>
+    <label>物件ページのテキスト貼り付け（APIなしでも可）</label>
+    <textarea id="p-text" placeholder="物件ページを全選択→コピー→ここに貼り付け"></textarea>
+    <button class="btn btn-sub" onclick="parseText()">📋 テキストから抽出</button>
+    <div id="ai-status"></div>
+  </div>
   <div class="card">
     <h2>🏢 物件情報 <span id="p-editing" class="badge b-warn" style="display:none;">編集中</span></h2>
     <label>物件名（メモ用）</label>
@@ -167,14 +226,14 @@ table.cmp td:first-child,table.cmp th:first-child{text-align:left; font-weight:7
     </div>
     <div class="row">
       <div><label>築年（西暦）</label><input type="number" inputmode="decimal" id="p-built" placeholder="2008"></div>
-      <div><label>専有面積（㎡・任意）</label><input type="number" inputmode="decimal" id="p-sqm" placeholder="25"></div>
+      <div><label>専有面積（㎡）</label><input type="number" inputmode="decimal" step="0.1" id="p-sqm" placeholder="25"></div>
     </div>
   </div>
   <div class="card">
     <h2>💴 価格・収支</h2>
     <div class="row">
       <div><label>物件価格（万円）</label><input type="number" inputmode="decimal" id="p-price" placeholder="4500"></div>
-      <div><label>想定家賃（万円/月）</label><input type="number" inputmode="decimal" id="p-rent" placeholder="15"></div>
+      <div><label>想定家賃（万円/月）</label><input type="number" inputmode="decimal" step="0.1" id="p-rent" placeholder="15"></div>
     </div>
     <div class="row">
       <div><label>管理費＋修繕積立金（万円/月）</label><input type="number" inputmode="decimal" step="0.1" id="p-mfee" placeholder="2.5"></div>
@@ -186,17 +245,19 @@ table.cmp td:first-child,table.cmp th:first-child{text-align:left; font-weight:7
     </div>
     <label>購入諸経費率（物件価格の%）</label>
     <input type="number" inputmode="decimal" step="0.1" id="p-cost" value="7">
-    <div class="hint">仲介手数料・登記・不動産取得税など。中古区分は7〜8%が目安。</div>
+    <div class="hint">未入力の項目は「🧮 推計で補完」で自動推計できます（固都税≒価格×0.35%、空室率はエリア別目安など）。</div>
+    <button class="btn btn-sub" onclick="fillEstimates()">🧮 未入力項目を推計で補完</button>
   </div>
   <div class="card">
     <h2>🏦 融資条件（想定）</h2>
+    <label>銀行を選択（財務タブで登録・編集）</label>
+    <select id="p-bank" onchange="applyBank()"></select>
     <div class="row">
       <div><label>頭金（万円）</label><input type="number" inputmode="decimal" id="p-down" value="0"></div>
       <div><label>金利（%）</label><input type="number" inputmode="decimal" step="0.01" id="p-rate" value="1.8"></div>
     </div>
     <label>借入期間（年）</label>
     <input type="number" inputmode="decimal" id="p-years" value="35">
-    <div class="hint">投資用区分の目安：オリックス銀行等で1.5〜2.5%・最長35年（築年数により短縮）。</div>
   </div>
   <button class="btn btn-gold" onclick="saveProp()">📊 判定する（保存）</button>
   <button class="btn btn-sub" id="p-cancel" style="display:none;" onclick="cancelEdit()">編集をキャンセル</button>
@@ -216,6 +277,10 @@ table.cmp td:first-child,table.cmp th:first-child{text-align:left; font-weight:7
     <div class="check-item"><div class="mark">🏗</div><div class="t"><b>新耐震基準（1981年6月以降）</b><span>実務上は1983年以降の竣工なら確実。</span></div></div>
     <div class="check-item"><div class="mark">📅</div><div class="t"><b>築15〜25年</b><span>新築プレミアムが剥げ落ち、価格が最も安定する帯。</span></div></div>
     <div class="check-item"><div class="mark">🚪</div><div class="t"><b>出口戦略が取れるエリア</b><span>港区A/Bクラス等、ローン残高を上回る価格で売れる立地。</span></div></div>
+  </div>
+  <div class="card">
+    <h2>⚠️ 想定家賃の「かさ増し」に注意</h2>
+    <p>収益物件広告の「想定家賃」は表面利回りを良く見せるため実勢より高く設定されがちです。本アプリはAI解析時に周辺の同条件物件（駅・広さ・築年）の実勢賃料を検索し、妥当家賃と妥当家賃ベースの利回りを併記します。<b>購入判断は必ず妥当家賃側の利回りで行ってください。</b>現入居者の実際の賃料（レントロール）を仲介に必ず確認するのが鉄則です。</p>
   </div>
   <div class="card">
     <h2>🤝 推奨仲介ルート（未公開物件）</h2>
@@ -240,18 +305,18 @@ table.cmp td:first-child,table.cmp th:first-child{text-align:left; font-weight:7
       <li><b>りそな銀行・地方銀行</b>：高属性の給与所得者に低金利（1%台前半〜）の可能性</li>
       <li><b>信用金庫</b>：エリア限定だが金利・条件の交渉余地あり</li>
     </ul>
-    <div class="hint">金利・条件は時期と属性で大きく変わります。必ず複数行に打診してください。</div>
+    <div class="hint">財務タブの銀行リストに実際の打診結果（金利・期間・条件）を登録して物件ごとに比較してください。</div>
   </div>
   <div class="card">
     <h2>⚠️ 負けないための鉄則</h2>
     <ul>
       <li>節税目的で買わない。キャッシュフローを出して税金を払う</li>
-      <li>表面利回りでなく<b>実質利回り</b>で判断する</li>
+      <li>表面利回りでなく<b>実質利回り</b>（それも妥当家賃ベース）で判断する</li>
       <li>空室率15〜20%でもストレステストする</li>
       <li>転売系プラットフォームの「上乗せ価格」に注意</li>
-      <li>1社の話だけを信じない。相場は自分でレインズ成約事例・複数社で確認</li>
+      <li>1社の話だけを信じない。レインズ成約事例・複数社で相場確認</li>
     </ul>
-    <div class="disclaimer">※ 本アプリは一般的な目安に基づくシミュレーションであり、金融・投資アドバイスではありません。実際の融資可否・条件は金融機関の審査によります。最終判断はご自身で行い、必要に応じて専門家（税理士・FP・弁護士）にご相談ください。</div>
+    <div class="disclaimer">※ 本アプリは一般的な目安に基づくシミュレーションであり、金融・投資アドバイスではありません。AI解析結果には誤りが含まれる場合があります。実際の融資可否・条件は金融機関の審査によります。最終判断はご自身で行い、必要に応じて専門家にご相談ください。</div>
   </div>
 </section>
 
@@ -287,7 +352,7 @@ function updateApp(){
 const $=id=>document.getElementById(id);
 const num=id=>{ const v=parseFloat($(id).value); return isNaN(v)?0:v; };
 const fmt=(v,d=1)=>v.toLocaleString('ja-JP',{maximumFractionDigits:d,minimumFractionDigits:0});
-// 元利均等：月返済額（万円）
+function esc(s){ return String(s??'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 function pmt(principal, ratePct, years){
   if(principal<=0||years<=0) return 0;
   const r=ratePct/100/12, n=years*12;
@@ -295,13 +360,90 @@ function pmt(principal, ratePct, years){
   return principal*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
 }
 
+/* ================= 設定 ================= */
+const AREA_KEYS=['A','B','C','T','M','X'];
+const AREA_NAMES={A:'港区Aクラス',B:'港区Bクラス',C:'港区Cクラス',T:'都心5区・城南城西',M:'23区・主要都市',X:'その他'};
+const DEFAULT_MARKET={A:[5600,6800],B:[4800,5800],C:[4300,5200],T:[3900,5000],M:[2800,4000],X:[1800,3000]};
+function getSettings(){
+  try{ const s=JSON.parse(localStorage.getItem('eip_settings'))||{}; s.market=s.market||JSON.parse(JSON.stringify(DEFAULT_MARKET)); s.model=s.model||'claude-sonnet-4-6'; return s; }
+  catch(e){ return {market:JSON.parse(JSON.stringify(DEFAULT_MARKET)), model:'claude-sonnet-4-6'}; }
+}
+function openSettings(){
+  const s=getSettings();
+  $('s-apikey').value=s.apiKey||''; $('s-model').value=s.model;
+  $('s-market').innerHTML=AREA_KEYS.map(k=>`
+    <div class="row" style="align-items:center; margin-bottom:6px;">
+      <div style="flex:1.4; font-size:12px;">${AREA_NAMES[k]}</div>
+      <div><input type="number" inputmode="decimal" id="m-${k}-lo" value="${s.market[k][0]}" style="padding:8px; font-size:14px;"></div>
+      <div><input type="number" inputmode="decimal" id="m-${k}-hi" value="${s.market[k][1]}" style="padding:8px; font-size:14px;"></div>
+    </div>`).join('');
+  $('settings').classList.add('open');
+}
+function saveSettings(){
+  const s=getSettings();
+  s.apiKey=$('s-apikey').value.trim(); s.model=$('s-model').value;
+  AREA_KEYS.forEach(k=>{ s.market[k]=[num(`m-${k}-lo`)||DEFAULT_MARKET[k][0], num(`m-${k}-hi`)||DEFAULT_MARKET[k][1]]; });
+  localStorage.setItem('eip_settings', JSON.stringify(s));
+  closeSettings();
+}
+function closeSettings(){ $('settings').classList.remove('open'); }
+
+/* ================= 銀行 ================= */
+const DEFAULT_BANKS=[
+  {id:1, name:'オリックス銀行', rate:1.8, years:35, memo:'投資用区分の定番・年収700万〜'},
+  {id:2, name:'三井住友トラストL&F', rate:2.9, years:30, memo:'物件評価重視・柔軟な担保評価'},
+  {id:3, name:'りそな銀行', rate:1.5, years:25, memo:'高属性給与所得者向け・支店持込'},
+  {id:4, name:'地方銀行（例）', rate:2.0, years:30, memo:'取引実績・エリア次第'}
+];
+function getBanks(){
+  try{ const b=JSON.parse(localStorage.getItem('eip_banks')); return Array.isArray(b)&&b.length? b : DEFAULT_BANKS; }
+  catch(e){ return DEFAULT_BANKS; }
+}
+function setBanks(a){ localStorage.setItem('eip_banks', JSON.stringify(a)); }
+function renderBanks(){
+  const banks=getBanks();
+  $('f-banks').innerHTML=banks.map(b=>`
+    <div class="bank-item">
+      <div class="bn"><span>🏦 ${esc(b.name)}</span><span>${b.rate}% / ${b.years}年</span></div>
+      <div class="bm">${esc(b.memo||'')}</div>
+      <div class="prop-actions">
+        <button class="btn-sm btn-sub" onclick="editBank(${b.id})">✏️ 編集</button>
+        <button class="btn-sm btn-danger" onclick="delBank(${b.id})">🗑 削除</button>
+      </div>
+    </div>`).join('');
+  const sel=$('p-bank'); const cur=sel.value;
+  sel.innerHTML='<option value="">（手動入力）</option>'+banks.map(b=>`<option value="${b.id}">${esc(b.name)}（${b.rate}%/${b.years}年）</option>`).join('');
+  if(cur) sel.value=cur;
+}
+function saveBank(){
+  const name=$('b-name').value.trim(); if(!name){ alert('銀行名を入力してください'); return; }
+  const banks=getBanks(); const id=parseInt($('b-id').value)||Date.now();
+  const b={id, name, rate:num('b-rate')||1.8, years:num('b-years')||35, memo:$('b-memo').value};
+  const i=banks.findIndex(x=>x.id===id);
+  if(i>=0) banks[i]=b; else banks.push(b);
+  setBanks(banks); renderBanks();
+  $('b-id').value=''; $('b-name').value=''; $('b-rate').value=''; $('b-years').value=''; $('b-memo').value='';
+}
+function editBank(id){
+  const b=getBanks().find(x=>x.id===id); if(!b) return;
+  $('b-id').value=b.id; $('b-name').value=b.name; $('b-rate').value=b.rate; $('b-years').value=b.years; $('b-memo').value=b.memo||'';
+}
+function delBank(id){
+  if(!confirm('この銀行を削除しますか？')) return;
+  setBanks(getBanks().filter(x=>x.id!==id)); renderBanks();
+}
+function applyBank(){
+  const id=parseInt($('p-bank').value); if(!id) return;
+  const b=getBanks().find(x=>x.id===id); if(!b) return;
+  $('p-rate').value=b.rate; $('p-years').value=b.years;
+}
+
 /* ================= 財務プロフィール ================= */
 function saveProfile(){
   const p={ income:num('f-income'), income2:num('f-income2'), cash:num('f-cash'),
     loan:num('f-loan'), loanRate:num('f-loanRate'), loanYears:num('f-loanYears'), otherDebt:num('f-otherDebt') };
   localStorage.setItem('eip_profile', JSON.stringify(p));
-  renderProfileSummary(); renderResult();
-  alert('財務状況を保存しました');
+  renderProfileSummary(); alert('財務状況を保存しました');
 }
 function getProfile(){ try{ return JSON.parse(localStorage.getItem('eip_profile'))||null; }catch(e){ return null; } }
 function loadProfileForm(){
@@ -311,14 +453,10 @@ function loadProfileForm(){
   $('f-otherDebt').value=p.otherDebt||'';
 }
 function profileCalc(p){
-  const homeMonthly=pmt(p.loan,p.loanRate,p.loanYears);           // 万円/月
-  const homeAnnual=homeMonthly*12;
+  const homeAnnual=pmt(p.loan,p.loanRate,p.loanYears)*12;
   const household=p.income+p.income2;
-  // 融資期待額：本人年収の8〜10倍から住宅ローン残高の一部を控除（保守：残高の50%を枠から差引）
-  const baseLow=p.income*8, baseHigh=p.income*10;
   const adj=p.loan*0.5;
-  const expLow=Math.max(0,baseLow-adj), expHigh=Math.max(0,baseHigh-adj);
-  return {homeAnnual, household, expLow, expHigh};
+  return {homeAnnual, household, expLow:Math.max(0,p.income*8-adj), expHigh:Math.max(0,p.income*10-adj)};
 }
 function renderProfileSummary(){
   const p=getProfile(); const el=$('f-summary');
@@ -328,7 +466,7 @@ function renderProfileSummary(){
     <div class="metric"><span>世帯年収</span><b>${fmt(c.household,0)} 万円</b></div>
     <div class="metric"><span>住宅ローン年間返済額（推計）</span><b>${fmt(c.homeAnnual,0)} 万円/年</b></div>
     <div class="metric"><span>投資用 融資期待額（目安）</span><b>${fmt(c.expLow,0)}〜${fmt(c.expHigh,0)} 万円</b></div>
-    <div class="hint">融資期待額＝本人年収×8〜10倍から住宅ローン残高の影響（残高×50%）を控除した一般的な目安。実際は金融機関・物件評価により変動します。</div></div>`;
+    <div class="hint">融資期待額＝本人年収×8〜10倍から住宅ローン残高の影響（残高×50%）を控除した一般的な目安。</div></div>`;
 }
 
 /* ================= 物件 ================= */
@@ -336,24 +474,28 @@ function getProps(){ try{ return JSON.parse(localStorage.getItem('eip_props'))||
 function setProps(a){ localStorage.setItem('eip_props', JSON.stringify(a.slice(0,50))); }
 let editId=null;
 function readPropForm(){
+  const old=editId? getProps().find(x=>x.id===editId) : null;
   return { id:editId||Date.now(), name:$('p-name').value||'（無題の物件）', area:$('p-area').value,
     walk:num('p-walk'), built:num('p-built'), sqm:num('p-sqm'),
     price:num('p-price'), rent:num('p-rent'), mfee:num('p-mfee'), tax:num('p-tax'),
     pmpct:num('p-pmpct'), vac:num('p-vac'), cost:num('p-cost'),
-    down:num('p-down'), rate:num('p-rate'), years:num('p-years'), ts:new Date().toISOString() };
+    down:num('p-down'), rate:num('p-rate'), years:num('p-years'),
+    bankId:parseInt($('p-bank').value)||null, url:$('p-url').value.trim()||null,
+    ai:(old&&old.ai)||window._pendingAi||null, ts:new Date().toISOString() };
 }
 function saveProp(){
   const p=readPropForm();
   if(!p.price||!p.rent){ alert('物件価格と想定家賃は必須です'); return; }
   const arr=getProps(); const i=arr.findIndex(x=>x.id===p.id);
   if(i>=0) arr[i]=p; else arr.unshift(p);
-  setProps(arr); cancelEdit(); clearPropForm();
-  showTab('result'); renderResult();
+  setProps(arr); cancelEdit(); clearPropForm(); window._pendingAi=null;
+  showTab('result');
 }
 function clearPropForm(){
-  ['p-name','p-walk','p-built','p-sqm','p-price','p-rent','p-mfee','p-tax'].forEach(id=>$(id).value='');
+  ['p-name','p-walk','p-built','p-sqm','p-price','p-rent','p-mfee','p-tax','p-url','p-text'].forEach(id=>$(id).value='');
   $('p-pmpct').value=5; $('p-vac').value=10; $('p-cost').value=7;
-  $('p-down').value=0; $('p-rate').value=1.8; $('p-years').value=35; $('p-area').value='A';
+  $('p-down').value=0; $('p-rate').value=1.8; $('p-years').value=35; $('p-area').value='A'; $('p-bank').value='';
+  $('ai-status').innerHTML='';
 }
 function editProp(id){
   const p=getProps().find(x=>x.id===id); if(!p) return;
@@ -363,6 +505,7 @@ function editProp(id){
   $('p-rent').value=p.rent; $('p-mfee').value=p.mfee||''; $('p-tax').value=p.tax||'';
   $('p-pmpct').value=p.pmpct; $('p-vac').value=p.vac; $('p-cost').value=p.cost;
   $('p-down').value=p.down; $('p-rate').value=p.rate; $('p-years').value=p.years;
+  $('p-bank').value=p.bankId||''; $('p-url').value=p.url||'';
   $('p-editing').style.display='inline-block'; $('p-cancel').style.display='block';
   showTab('prop'); window.scrollTo(0,0);
 }
@@ -372,49 +515,202 @@ function delProp(id){
   setProps(getProps().filter(x=>x.id!==id)); renderResult();
 }
 
+/* ================= 推計補完 ================= */
+const VAC_EST={A:5,B:7,C:8,T:10,M:12,X:15};
+function fillEstimates(){
+  const price=num('p-price'), area=$('p-area').value;
+  if(!$('p-tax').value && price) $('p-tax').value=Math.round(price*0.0035*10)/10;   // 固都税≒価格×0.35%
+  if(!$('p-mfee').value && num('p-sqm')) $('p-mfee').value=Math.round(num('p-sqm')*950/1000*10)/10; // ≒950円/㎡
+  if(!$('p-pmpct').value) $('p-pmpct').value=5;
+  if(!$('p-vac').value) $('p-vac').value=VAC_EST[area]??10;
+  if(!$('p-cost').value) $('p-cost').value=7;
+  alert('未入力項目を一般的な目安で補完しました。\n・固定資産税等 ≒ 価格×0.35%/年\n・管理費+修繕積立 ≒ 950円/㎡/月\n・空室率はエリア別目安\n実額が分かり次第、上書きしてください。');
+}
+
+/* ================= テキスト貼り付け解析（API不要） ================= */
+function parseText(){
+  const t=$('p-text').value; if(!t.trim()){ alert('物件ページのテキストを貼り付けてください'); return; }
+  const got=[];
+  let m;
+  // 価格：1億2,300万円 / 4,580万円
+  m=t.match(/([0-9,.]+)\s*億\s*([0-9,]+)?\s*万?円/);
+  if(m){ $('p-price').value=parseFloat(m[1].replace(/,/g,''))*10000+(m[2]?parseFloat(m[2].replace(/,/g,'')):0); got.push('価格'); }
+  else{ m=t.match(/(?:価格|販売価格)[^0-9]{0,10}([0-9,]+)\s*万円/) || t.match(/([0-9][0-9,]{2,})\s*万円/);
+    if(m){ $('p-price').value=parseFloat(m[1].replace(/,/g,'')); got.push('価格'); } }
+  // 家賃：想定賃料/賃料 12.5万円 or 125,000円
+  m=t.match(/(?:想定賃料|賃料|家賃)[^0-9]{0,10}([0-9.]+)\s*万円/);
+  if(m){ $('p-rent').value=parseFloat(m[1]); got.push('家賃'); }
+  else{ m=t.match(/(?:想定賃料|賃料|家賃)[^0-9]{0,10}([0-9,]{4,})\s*円/);
+    if(m){ $('p-rent').value=Math.round(parseFloat(m[1].replace(/,/g,''))/1000)/10; got.push('家賃'); } }
+  // 管理費・修繕積立金（円/月）→合算
+  let fee=0;
+  m=t.match(/管理費[^0-9]{0,10}([0-9,]+)\s*円/); if(m) fee+=parseFloat(m[1].replace(/,/g,''));
+  m=t.match(/修繕積立金[^0-9]{0,10}([0-9,]+)\s*円/); if(m) fee+=parseFloat(m[1].replace(/,/g,''));
+  if(fee>0){ $('p-mfee').value=Math.round(fee/1000)/10; got.push('管理費等'); }
+  // 徒歩
+  m=t.match(/徒歩\s*([0-9]+)\s*分/); if(m){ $('p-walk').value=m[1]; got.push('徒歩'); }
+  // 築年：築年月 2008年 / 1998年3月築 / 築17年
+  m=t.match(/(19[5-9][0-9]|20[0-4][0-9])\s*年\s*[0-9]{0,2}\s*月?\s*(?:築|竣工|建築)/) || t.match(/(?:築年月|竣工|建築年月)[^0-9]{0,10}(19[5-9][0-9]|20[0-4][0-9])/);
+  if(m){ $('p-built').value=m[1]; got.push('築年'); }
+  else{ m=t.match(/築\s*([0-9]{1,2})\s*年/); if(m){ $('p-built').value=new Date().getFullYear()-parseInt(m[1]); got.push('築年'); } }
+  // 面積
+  m=t.match(/([0-9]{1,3}(?:\.[0-9]+)?)\s*(?:㎡|m2|m²|平米)/); if(m){ $('p-sqm').value=m[1]; got.push('面積'); }
+  $('ai-status').innerHTML=got.length? `<div class="ai-box">📋 抽出: ${got.join('・')}。未取得項目は手入力するか「🧮 推計で補完」を。家賃妥当性は保存後、判定タブの「🔍 AI家賃査定」または内蔵相場で確認できます。</div>`
+    : '<div class="ai-box">⚠️ 抽出できませんでした。ページ全体を選択してコピーし直してみてください。</div>';
+}
+
+/* ================= Claude API ================= */
+async function callClaude(userPrompt, useTools){
+  const s=getSettings();
+  if(!s.apiKey) throw new Error('APIキー未設定です。⚙️設定から入力してください。');
+  const body={ model:s.model, max_tokens:3000,
+    system:'あなたは日本の不動産投資（東京・港区中心の中古区分マンション）の分析アシスタント。必ず最後に指定のJSONのみをコードブロックなしで出力する。数値は単位変換に注意（万円/円）。不明な項目はnull。',
+    messages:[{role:'user', content:userPrompt}] };
+  if(useTools) body.tools=[
+    {type:'web_search_20250305', name:'web_search', max_uses:4},
+    {type:'web_fetch_20250910', name:'web_fetch', max_uses:4}
+  ];
+  const res=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{ 'content-type':'application/json', 'x-api-key':s.apiKey,
+      'anthropic-version':'2023-06-01',
+      'anthropic-beta':'web-fetch-2025-09-10',
+      'anthropic-dangerous-direct-browser-access':'true' },
+    body:JSON.stringify(body)
+  });
+  if(!res.ok){ const e=await res.text(); throw new Error('API error '+res.status+': '+e.slice(0,200)); }
+  const data=await res.json();
+  const texts=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n');
+  const jm=texts.match(/\{[\s\S]*\}/);
+  if(!jm) throw new Error('JSON応答を取得できませんでした');
+  return JSON.parse(jm[0]);
+}
+function aiStatus(html){ $('ai-status').innerHTML=html; }
+
+const AI_SCHEMA=`{
+ "name": 物件名(string|null), "price": 物件価格_万円(number|null), "rent": 想定家賃_万円每月(number|null),
+ "mfee": 管理費と修繕積立金の合計_万円每月(number|null), "tax": 固定資産税都市計画税_万円每年_推計可(number|null),
+ "walk": 駅徒歩_分(number|null), "built": 築年_西暦(number|null), "sqm": 専有面積_平米(number|null),
+ "area_class": "A"|"B"|"C"|"T"|"M"|"X",
+ "pmpct": 賃貸管理料_家賃比パーセント_推計(number), "vac": 想定空室率_パーセント_推計(number), "cost": 購入諸経費率_パーセント_推計(number),
+ "fair_rent": 周辺実勢に基づく妥当家賃_万円每月(number|null), "fair_rent_range": [下限,上限]|null,
+ "rent_verdict": "妥当"|"やや割高"|"かさ増しの疑い"|"割安"|null, "rent_note": 判定根拠_周辺相場の具体例含む_200字以内(string|null)
+}
+area_class定義: A=港区(麻布六本木赤坂青山), B=港区(白金高輪三田高輪), C=港区(田町芝浦浜松町), T=その他都心5区・城南城西, M=その他23区・主要都市, X=それ以外`;
+
+async function aiAnalyzeUrl(){
+  const url=$('p-url').value.trim();
+  if(!url){ alert('物件URLを入力してください'); return; }
+  const btn=$('ai-url-btn'); btn.disabled=true;
+  aiStatus('<div class="ai-box"><span class="spinner" style="border-color:var(--ai);border-top-color:transparent;"></span>AIがページ取得→解析→周辺相場検索中…（30秒〜1分）</div>');
+  try{
+    const j=await callClaude(
+`次の収益物件ページをweb_fetchで取得して解析せよ: ${url}
+取得できない場合はweb_searchでこの物件情報を検索して補完せよ。
+さらに、この物件の立地（駅・徒歩分数）・広さ・築年に近い賃貸物件の実勢賃料をweb_searchで調べ、広告の想定家賃が実勢よりかさ増しされていないか判定せよ。
+固定資産税は不明なら価格×0.35%/年で推計。管理料は5%、諸経費率は7%を基準に物件特性で調整。空室率はエリア実勢で推計。
+最後に次のJSONのみを出力: ${AI_SCHEMA}`, true);
+    applyAiResult(j);
+  }catch(e){
+    aiStatus(`<div class="ai-box">❌ ${esc(e.message)}<br>サイトにブロックされた可能性があります。物件ページのテキストを貼り付けて「📋 テキストから抽出」→保存後に「🔍 AI家賃査定」をお試しください。</div>`);
+  }finally{ btn.disabled=false; }
+}
+function applyAiResult(j){
+  const set=(id,v)=>{ if(v!=null && v!=='' && !isNaN(v)) $(id).value=Math.round(v*100)/100; };
+  if(j.name) $('p-name').value=j.name;
+  if(j.area_class && AREA_KEYS.includes(j.area_class)) $('p-area').value=j.area_class;
+  set('p-price',j.price); set('p-rent',j.rent); set('p-mfee',j.mfee); set('p-tax',j.tax);
+  set('p-walk',j.walk); set('p-built',j.built); set('p-sqm',j.sqm);
+  set('p-pmpct',j.pmpct); set('p-vac',j.vac); set('p-cost',j.cost);
+  window._pendingAi=(j.fair_rent||j.rent_verdict)? {fairRent:j.fair_rent, fairRange:j.fair_rent_range, verdict:j.rent_verdict, note:j.rent_note, ts:new Date().toISOString()} : null;
+  const v=j.rent_verdict||'判定不能';
+  const vb=v==='妥当'||v==='割安'?'b-ok':(v==='やや割高'?'b-warn':'b-ng');
+  aiStatus(`<div class="ai-box">✅ 解析完了・各項目に自動入力しました。<br>
+    <b>家賃査定:</b> <span class="badge ${vb}">${esc(v)}</span> 妥当家賃 ${j.fair_rent? fmt(j.fair_rent)+'万円/月':'—'}${j.fair_rent_range? '（'+fmt(j.fair_rent_range[0])+'〜'+fmt(j.fair_rent_range[1])+'万円）':''}<br>
+    ${esc(j.rent_note||'')}<br>内容を確認・修正のうえ「📊 判定する」を押してください。</div>`);
+}
+async function aiCheckRent(id){
+  const arr=getProps(); const p=arr.find(x=>x.id===id); if(!p) return;
+  const el=$('aiRentBtn-'+id); if(el){ el.disabled=true; el.textContent='査定中…'; }
+  try{
+    const j=await callClaude(
+`東京の賃貸実勢相場をweb_searchで調査し、次の物件の想定家賃が妥当か判定せよ。
+物件: ${p.name} / エリア区分:${AREA_NAMES[p.area]} / 駅徒歩${p.walk}分 / 築年${p.built}年 / 専有${p.sqm}㎡ / 想定家賃${p.rent}万円/月 ${p.url? '/ URL:'+p.url:''}
+同駅・同程度の広さ・築年の賃貸募集事例を根拠に、妥当家賃（レンジも）と判定を出せ。
+最後に次のJSONのみ出力:
+{"fair_rent": number, "fair_rent_range":[number,number], "rent_verdict":"妥当"|"やや割高"|"かさ増しの疑い"|"割安", "rent_note": string(根拠200字以内)}`, true);
+    p.ai={fairRent:j.fair_rent, fairRange:j.fair_rent_range, verdict:j.rent_verdict, note:j.rent_note, ts:new Date().toISOString()};
+    setProps(arr); renderResult();
+  }catch(e){
+    alert('AI査定エラー: '+e.message);
+    if(el){ el.disabled=false; el.textContent='🔍 AI家賃査定'; }
+  }
+}
+
 /* ================= 計算 ================= */
-function calcProp(p, profile){
-  const annualRent=p.rent*12;
-  const grossYield=p.price>0? annualRent/p.price*100 :0;
-  const pmFee=annualRent*(p.pmpct/100);
-  const opex=p.mfee*12 + p.tax + pmFee;                       // 年間経費（万円）
+function yields(p, rentOverride){
+  const rent=rentOverride??p.rent;
+  const annualRent=rent*12;
+  const gross=p.price>0? annualRent/p.price*100 :0;
+  const opex=p.mfee*12 + p.tax + annualRent*(p.pmpct/100);
   const effRent=annualRent*(1-p.vac/100);
-  const totalInvest=p.price*(1+p.cost/100);
-  const netYield=totalInvest>0? (effRent-opex)/totalInvest*100 :0;
+  const total=p.price*(1+p.cost/100);
+  const net=total>0? (effRent-opex)/total*100 :0;
+  return {gross,net,annualRent,opex,effRent};
+}
+function calcProp(p, profile){
+  const y=yields(p);
   const loanAmt=Math.max(0,p.price-p.down);
-  const mPay=pmt(loanAmt,p.rate,p.years);                     // 万円/月
-  const cfMonthly=p.rent*(1-p.vac/100) - p.mfee - (p.rent*p.pmpct/100) - p.tax/12 - mPay;
-  // ストレス：空室20%・金利+1%
+  const mPay=pmt(loanAmt,p.rate,p.years);
+  const monthlyCosts=p.mfee + (p.rent*p.pmpct/100) + p.tax/12;
+  const cfMonthly=p.rent*(1-p.vac/100) - monthlyCosts - mPay;
   const mPayS=pmt(loanAmt,p.rate+1,p.years);
-  const cfStress=p.rent*0.8 - p.mfee - (p.rent*p.pmpct/100) - p.tax/12 - mPayS;
+  const cfStress=p.rent*0.8 - monthlyCosts - mPayS;
   const age=p.built>0? (new Date().getFullYear()-p.built) : -1;
-  // 5条件
+  // 家賃妥当性（AI優先 → 内蔵相場フォールバック）
+  let rentCheck=null;
+  if(p.ai && p.ai.fairRent){
+    rentCheck={src:'AI', fair:p.ai.fairRent, range:p.ai.fairRange, verdict:p.ai.verdict, note:p.ai.note, ts:p.ai.ts};
+  }else if(p.sqm>0){
+    const mk=getSettings().market[p.area]||DEFAULT_MARKET[p.area];
+    const lo=mk[0]*p.sqm/10000, hi=mk[1]*p.sqm/10000, mid=(lo+hi)/2;
+    let verdict='妥当';
+    if(p.rent>hi*1.05) verdict='かさ増しの疑い';
+    else if(p.rent>hi) verdict='やや割高';
+    else if(p.rent<lo*0.9) verdict='割安';
+    rentCheck={src:'内蔵相場', fair:mid, range:[lo,hi], verdict,
+      note:`内蔵相場（${AREA_NAMES[p.area]}: ${fmt(mk[0],0)}〜${fmt(mk[1],0)}円/㎡）×${p.sqm}㎡による機械判定。AI査定でより正確に確認できます。`};
+  }
+  let fairY=null, fairCf=null;
+  if(rentCheck&&rentCheck.fair){
+    fairY=yields(p, rentCheck.fair);
+    fairCf=rentCheck.fair*(1-p.vac/100) - (p.mfee + rentCheck.fair*p.pmpct/100 + p.tax/12) - mPay;
+  }
+  // 5条件（利回りは妥当家賃ベースがあればそちらで判定）
+  const judgeNet=fairY? fairY.net : y.net;
   const checks=[];
-  checks.push(mk('駅徒歩5分以内', p.walk>0&&p.walk<=5?2:(p.walk<=7?1:0), `徒歩${p.walk||'未入力'}分`));
+  checks.push(mk2('駅徒歩5分以内', p.walk>0&&p.walk<=5?2:(p.walk<=7?1:0), `徒歩${p.walk||'未入力'}分`));
   const yTh=(p.area==='A')?3.5:4.0;
-  checks.push(mk('実質利回り4.0%以上', netYield>=4?2:(netYield>=yTh?1:0), `実質${netYield.toFixed(2)}%${p.area==='A'&&netYield<4&&netYield>=3.5?'（港区Aクラスは3.5%〜許容）':''}`));
-  checks.push(mk('新耐震基準', p.built>=1983?2:(p.built>=1981?1:0), p.built?`築年 ${p.built}年${p.built>=1981&&p.built<1983?'（要竣工月確認）':''}`:'築年未入力'));
-  checks.push(mk('築15〜25年', (age>=15&&age<=25)?2:((age>=10&&age<30)?1:0), age>=0?`築${age}年`:'築年未入力'));
+  checks.push(mk2('実質利回り4.0%以上'+(fairY?'（妥当家賃ベース）':''), judgeNet>=4?2:(judgeNet>=yTh?1:0), `実質${judgeNet.toFixed(2)}%${p.area==='A'&&judgeNet<4&&judgeNet>=3.5?'（港区Aは3.5%〜許容）':''}`));
+  checks.push(mk2('新耐震基準', p.built>=1983?2:(p.built>=1981?1:0), p.built?`築年 ${p.built}年${p.built>=1981&&p.built<1983?'（要竣工月確認）':''}`:'築年未入力'));
+  checks.push(mk2('築15〜25年', (age>=15&&age<=25)?2:((age>=10&&age<30)?1:0), age>=0?`築${age}年`:'築年未入力'));
   const areaScore={A:2,B:2,C:1,T:1,M:1,X:0}[p.area]??0;
-  checks.push(mk('出口戦略（エリア）', areaScore, $('p-area')? areaLabel(p.area):''));
-  const score=checks.reduce((s,c)=>s+c.s,0); // /10
+  checks.push(mk2('出口戦略（エリア）', areaScore, AREA_NAMES[p.area]));
+  const score=checks.reduce((s,c)=>s+c.s,0);
   // 融資判定
   let fin=null;
   if(profile){
     const pc=profileCalc(profile);
-    const newAnnual=mPay*12;
-    const income=profile.income+profile.income2 + effRent*0.7;  // 家賃70%算入
-    const totalPay=pc.homeAnnual + profile.otherDebt + newAnnual;
-    const dsr=income>0? totalPay/income*100 :0;
-    const within=loanAmt<=pc.expHigh;
-    fin={dsr, newAnnual, expLow:pc.expLow, expHigh:pc.expHigh, loanAmt, within,
-      cashNeed:p.price*p.cost/100 + p.down, cashOK:(p.price*p.cost/100+p.down)<=profile.cash};
+    const income=profile.income+profile.income2 + y.effRent*0.7;
+    const totalPay=pc.homeAnnual + profile.otherDebt + mPay*12;
+    fin={dsr:income>0? totalPay/income*100:0, expLow:pc.expLow, expHigh:pc.expHigh, loanAmt,
+      within:loanAmt<=pc.expHigh, cashNeed:p.price*p.cost/100+p.down,
+      cashOK:(p.price*p.cost/100+p.down)<=profile.cash};
   }
-  return {annualRent,grossYield,netYield,opex,totalInvest,loanAmt,mPay,cfMonthly,cfStress,age,checks,score,fin};
+  return {...y, loanAmt, mPay, cfMonthly, cfStress, age, checks, score, fin, rentCheck, fairY, fairCf};
 }
-function mk(n,s,d){ return {n,s,d}; }
-function areaLabel(a){ return {A:'港区Aクラス',B:'港区Bクラス',C:'港区Cクラス',T:'都心5区・城南城西',M:'23区・主要都市',X:'その他'}[a]||''; }
-function markIcon(s){ return s===2?'⭕️':(s===1?'⚠️':'❌'); }
+function mk2(n,s,d){ return {n,s,d}; }
+function vBadge(v){ return v==='妥当'||v==='割安'?'b-ok':(v==='やや割高'?'b-warn':'b-ng'); }
 
 /* ================= 判定タブ描画 ================= */
 function renderResult(){
@@ -423,41 +719,76 @@ function renderResult(){
     el.innerHTML='<div class="card"><div class="empty">物件がまだ登録されていません。<br>「🏢 物件」タブから入力してください。</div></div>';
     return;
   }
+  const hasKey=!!getSettings().apiKey;
   let html='';
   if(!profile) html+='<div class="card"><div class="hint">⚠️ 財務状況が未入力です。「💰 財務」タブで保存すると融資判定が表示されます。</div></div>';
   props.forEach(p=>{
     const c=calcProp(p,profile);
     const grade=c.score>=8?['勝率：高','b-ok','var(--green)']:(c.score>=5?['勝率：中','b-warn','var(--orange)']:['勝率：低','b-ng','var(--red)']);
     html+=`<div class="card">
-      <div class="prop-card" style="cursor:default;background:#fff;border:none;padding:0;margin-bottom:6px;">
-        <div class="name"><span>🏢 ${esc(p.name)}</span><span class="badge ${grade[1]}">${grade[0]} ${c.score}/10</span></div>
-        <div class="meta">${areaLabel(p.area)}｜徒歩${p.walk||'-'}分｜${p.built?p.built+'年築（築'+c.age+'年）':'築年未入力'}｜${fmt(p.price,0)}万円</div>
+      <div style="margin-bottom:6px;">
+        <div style="font-weight:700; font-size:14px; display:flex; justify-content:space-between; align-items:center;"><span>🏢 ${esc(p.name)}</span><span class="badge ${grade[1]}">${grade[0]} ${c.score}/10</span></div>
+        <div style="font-size:11px; color:var(--muted); margin-top:3px;">${AREA_NAMES[p.area]}｜徒歩${p.walk||'-'}分｜${p.built?p.built+'年築（築'+c.age+'年）':'築年未入力'}｜${p.sqm?p.sqm+'㎡｜':''}${fmt(p.price,0)}万円</div>
       </div>
       <div class="score-bar"><div style="width:${c.score*10}%;background:${grade[2]};"></div></div>
-      <div class="big-yield"><span class="v" style="color:${c.netYield>=4?'var(--green)':(c.netYield>=3.5?'var(--orange)':'var(--red)')}">${c.netYield.toFixed(2)}<small style="font-size:16px;">%</small></span><div class="l">実質利回り（表面 ${c.grossYield.toFixed(2)}%）</div></div>
+      <div class="big-yield"><span class="v" style="color:${c.net>=4?'var(--green)':(c.net>=3.5?'var(--orange)':'var(--red)')}">${c.net.toFixed(2)}<small style="font-size:16px;">%</small></span><div class="l">実質利回り（表面 ${c.gross.toFixed(2)}%）※広告家賃ベース</div></div>
+      ${renderRentCheck(c,p,hasKey)}
       <h3>✅ 負けない5条件チェック</h3>
-      ${c.checks.map(ch=>`<div class="check-item"><div class="mark">${markIcon(ch.s)}</div><div class="t"><b>${ch.n}</b><span>${ch.d}</span></div></div>`).join('')}
+      ${c.checks.map(ch=>`<div class="check-item"><div class="mark">${ch.s===2?'⭕️':(ch.s===1?'⚠️':'❌')}</div><div class="t"><b>${ch.n}</b><span>${ch.d}</span></div></div>`).join('')}
       <h3>💵 キャッシュフロー（月次）</h3>
-      <div class="metric"><span>通常時（空室${p.vac}%想定）</span><b style="color:${c.cfMonthly>=0?'var(--green)':'var(--red)'}">${c.cfMonthly>=0?'+':''}${fmt(c.cfMonthly*10000,0)} 円/月</b></div>
+      <div class="metric"><span>通常時（空室${p.vac}%・広告家賃）</span><b style="color:${c.cfMonthly>=0?'var(--green)':'var(--red)'}">${c.cfMonthly>=0?'+':''}${fmt(c.cfMonthly*10000,0)} 円/月</b></div>
+      ${c.fairCf!=null?`<div class="metric"><span>妥当家賃ベース</span><b style="color:${c.fairCf>=0?'var(--green)':'var(--red)'}">${c.fairCf>=0?'+':''}${fmt(c.fairCf*10000,0)} 円/月</b></div>`:''}
       <div class="metric"><span>ストレス時（空室20%・金利+1%）</span><b style="color:${c.cfStress>=0?'var(--green)':'var(--red)'}">${c.cfStress>=0?'+':''}${fmt(c.cfStress*10000,0)} 円/月</b></div>
-      <div class="metric"><span>ローン返済額</span><b>${fmt(c.mPay*10000,0)} 円/月</b></div>
-      <div class="metric"><span>年間経費（管理費・税・管理料）</span><b>${fmt(c.opex,0)} 万円/年</b></div>
-      ${c.fin? renderFin(c,p):''}
+      <div class="metric"><span>ローン返済（${esc(bankName(p))}）</span><b>${fmt(c.mPay*10000,0)} 円/月</b></div>
+      ${renderBankCompare(p)}
+      ${c.fin? renderFin(c):''}
       ${renderAction(c,p,profile)}
       <div class="prop-actions">
-        <button class="btn-sub" onclick="editProp(${p.id})">✏️ 編集</button>
-        <button class="btn-danger" onclick="delProp(${p.id})">🗑 削除</button>
+        ${hasKey?`<button class="btn-sm btn-ai" id="aiRentBtn-${p.id}" onclick="aiCheckRent(${p.id})">🔍 AI家賃査定</button>`:''}
+        <button class="btn-sm btn-sub" onclick="editProp(${p.id})">✏️ 編集</button>
+        <button class="btn-sm btn-danger" onclick="delProp(${p.id})">🗑 削除</button>
       </div>
     </div>`;
   });
   if(props.length>=2) html+=renderCompare(props,profile);
-  html+='<div class="disclaimer">※ 一般的な目安に基づくシミュレーションです。金融・投資アドバイスではありません。実際の融資可否は金融機関の審査によります。</div>';
+  html+='<div class="disclaimer">※ 一般的な目安・AI解析に基づくシミュレーションです。金融・投資アドバイスではありません。AI査定には誤りが含まれる場合があります。購入前に必ずレントロール（実際の賃料）と重要事項を確認してください。</div>';
   el.innerHTML=html;
 }
-function renderFin(c,p){
+function bankName(p){
+  if(!p.bankId) return `${p.rate}%/${p.years}年`;
+  const b=getBanks().find(x=>x.id===p.bankId);
+  return b? `${b.name} ${p.rate}%/${p.years}年` : `${p.rate}%/${p.years}年`;
+}
+function renderRentCheck(c,p,hasKey){
+  if(!c.rentCheck){
+    return `<div class="ai-box">💡 専有面積を入力すると内蔵相場で家賃妥当性を判定します。${hasKey?'「🔍 AI家賃査定」で周辺実勢の検索判定も可能。':'⚙️設定でAPIキーを入れるとAI査定が使えます。'}</div>`;
+  }
+  const r=c.rentCheck;
+  const diff=r.fair? (p.rent-r.fair)/r.fair*100 : 0;
+  return `<h3>🔍 家賃妥当性チェック <span class="badge b-ai">${r.src}</span></h3>
+    <div class="metric"><span>広告の想定家賃</span><b>${fmt(p.rent)} 万円/月</b></div>
+    <div class="metric"><span>妥当家賃${r.range? '（'+fmt(r.range[0])+'〜'+fmt(r.range[1])+'万円）':''}</span><b>${fmt(r.fair)} 万円/月</b></div>
+    <div class="metric"><span>乖離</span><b><span class="badge ${vBadge(r.verdict)}">${esc(r.verdict)} ${diff>=0?'+':''}${diff.toFixed(1)}%</span></b></div>
+    ${c.fairY?`<div class="metric"><span>妥当家賃での表面利回り</span><b>${c.fairY.gross.toFixed(2)}%</b></div>
+    <div class="metric"><span>妥当家賃での実質利回り</span><b style="color:${c.fairY.net>=4?'var(--green)':(c.fairY.net>=3.5?'var(--orange)':'var(--red)')}">${c.fairY.net.toFixed(2)}%</b></div>`:''}
+    ${r.note?`<div class="hint">${esc(r.note)}</div>`:''}`;
+}
+function renderBankCompare(p){
+  const banks=getBanks(); if(banks.length<2) return '';
+  const loanAmt=Math.max(0,p.price-p.down);
+  const monthlyCosts=p.mfee + (p.rent*p.pmpct/100) + p.tax/12;
+  const rows=banks.map(b=>{
+    const m=pmt(loanAmt,b.rate,b.years);
+    const cf=p.rent*(1-p.vac/100)-monthlyCosts-m;
+    return `<tr><td>${esc(b.name)}</td><td>${b.rate}%/${b.years}年</td><td>${fmt(m*10000,0)}</td><td style="color:${cf>=0?'var(--green)':'var(--red)'}">${cf>=0?'+':''}${fmt(cf*10000,0)}</td></tr>`;
+  }).join('');
+  return `<h3>🏦 銀行別比較（借入${fmt(loanAmt,0)}万円）</h3><table class="cmp">
+    <tr><th>銀行</th><th>条件</th><th>月返済(円)</th><th>月CF(円)</th></tr>${rows}</table>`;
+}
+function renderFin(c){
   const f=c.fin;
   const dsrB=f.dsr<=30?'b-ok':(f.dsr<=35?'b-warn':'b-ng');
-  return `<h3>🏦 融資判定（目安）</h3>
+  return `<h3>💳 融資判定（目安）</h3>
     <div class="metric"><span>必要借入額</span><b>${fmt(f.loanAmt,0)} 万円</b></div>
     <div class="metric"><span>融資期待額</span><b>${fmt(f.expLow,0)}〜${fmt(f.expHigh,0)} 万円 ${f.within?'<span class="badge b-ok">枠内</span>':'<span class="badge b-ng">枠超過</span>'}</b></div>
     <div class="metric"><span>総返済負担率（家賃70%算入）</span><b><span class="badge ${dsrB}">${f.dsr.toFixed(1)}%</span></b></div>
@@ -465,16 +796,18 @@ function renderFin(c,p){
 }
 function renderAction(c,p,profile){
   const a=[];
+  if(c.rentCheck && (c.rentCheck.verdict==='かさ増しの疑い')) a.push(`想定家賃が実勢より${((p.rent-c.rentCheck.fair)/c.rentCheck.fair*100).toFixed(0)}%高い疑い。妥当家賃ベースの実質利回り${c.fairY?c.fairY.net.toFixed(2)+'%':''}で再判断を。指値交渉の根拠にもなります。`);
   if(!profile){ a.push('財務タブを入力すると、住宅ローンを考慮した具体的アクションを表示します。'); }
   else{
     const f=c.fin;
     if(f.dsr<=30 && f.within && c.score>=8) a.push('属性・物件とも良好。フルローン（諸経費のみ手出し）で買付を入れる水準です。三井・住友・野村の投資専門部署に源泉徴収票3年分を添えて即打診を。');
-    else if(f.dsr<=35 && f.within) a.push('融資は現実的な範囲。まずオリックス銀行＋りそな等2〜3行に事前審査を並行で出し、金利条件を競わせるのが得策です。');
+    else if(f.dsr<=35 && f.within) a.push('融資は現実的な範囲。銀行リストの2〜3行に事前審査を並行で出し、金利条件を競わせるのが得策です。');
     else if(!f.within) a.push(`借入額が融資期待枠（〜${fmt(f.expHigh,0)}万円）を超えています。頭金の増額、または価格帯を下げた物件の検討を。`);
     if(f.dsr>35) a.push(`総返済負担率${f.dsr.toFixed(1)}%は審査上不利（目安35%以内）。住宅ローンの繰上返済 or 頭金増額で負担率を下げてから動くのが安全です。`);
     if(!f.cashOK) a.push(`必要現金${fmt(f.cashNeed,0)}万円に対し自己資金が不足。諸経費分の現金確保が先決です。`);
   }
-  if(c.cfMonthly<0) a.push('通常時からキャッシュフローがマイナス。家賃・価格・金利条件の再交渉か見送りを推奨（「ガンガンCFを出す」方針に反します）。');
+  const cfJudge=c.fairCf!=null? c.fairCf : c.cfMonthly;
+  if(cfJudge<0) a.push('（妥当家賃ベースで）月次キャッシュフローがマイナス。価格交渉・金利条件改善か見送りを推奨（「ガンガンCFを出す」方針に反します）。');
   else if(c.cfStress<0) a.push('ストレス時（空室20%・金利+1%）にCFがマイナス化。港区Aクラスなら許容範囲ですが、手元流動性を厚めに。');
   const bad=c.checks.filter(x=>x.s===0);
   if(bad.length) a.push('未達条件：'+bad.map(x=>x.n).join('・')+'。5条件を満たさない物件は原則見送りが「負けない」鉄則です。');
@@ -485,14 +818,14 @@ function renderCompare(props,profile){
   let rows=props.map(p=>{
     const c=calcProp(p,profile);
     return `<tr><td>${esc(p.name.length>8?p.name.slice(0,8)+'…':p.name)}</td>
-      <td>${fmt(p.price,0)}</td><td>${c.netYield.toFixed(2)}%</td>
-      <td style="color:${c.cfMonthly>=0?'var(--green)':'var(--red)'}">${fmt(c.cfMonthly*10000,0)}</td>
+      <td>${fmt(p.price,0)}</td><td>${c.net.toFixed(2)}%</td>
+      <td>${c.fairY? c.fairY.net.toFixed(2)+'%':'—'}</td>
+      <td style="color:${(c.fairCf??c.cfMonthly)>=0?'var(--green)':'var(--red)'}">${fmt((c.fairCf??c.cfMonthly)*10000,0)}</td>
       <td>${c.score}/10</td></tr>`;
   }).join('');
   return `<div class="card"><h2>⚖️ 物件比較</h2><table class="cmp">
-    <tr><th>物件</th><th>価格(万)</th><th>実質利回り</th><th>月CF(円)</th><th>スコア</th></tr>${rows}</table></div>`;
+    <tr><th>物件</th><th>価格(万)</th><th>実質(広告)</th><th>実質(妥当)</th><th>月CF(円)</th><th>スコア</th></tr>${rows}</table></div>`;
 }
-function esc(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
 /* ================= タブ ================= */
 function showTab(t){
@@ -500,11 +833,11 @@ function showTab(t){
   document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('on'));
   $('page-'+t).classList.add('active'); $('nav-'+t).classList.add('on');
   if(t==='result') renderResult();
-  if(t==='finance') renderProfileSummary();
+  if(t==='finance'){ renderProfileSummary(); renderBanks(); }
 }
 
 /* ================= init ================= */
-loadProfileForm(); renderProfileSummary();
+loadProfileForm(); renderProfileSummary(); renderBanks();
 showTab(getProfile()? (getProps().length? 'result':'prop') : 'finance');
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
 </script>
