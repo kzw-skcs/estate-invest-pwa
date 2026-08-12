@@ -173,7 +173,11 @@ table.cmp td:first-child,table.cmp th:first-child{text-align:left; font-weight:7
     </div>
     <label>残年数（年）</label>
     <input type="number" inputmode="decimal" id="f-loanYears" placeholder="30">
-    <div class="hint">残高・金利・残年数から年間返済額を自動計算し、返済比率の判定に使います。住宅ローンがなければ空欄でOK。</div>
+    <div class="row">
+      <div><label>住宅ローン控除の残り年数（年）</label><input type="number" inputmode="decimal" id="f-deducYears" placeholder="10"></div>
+      <div><label>控除対象残高の上限（万円）</label><input type="number" inputmode="decimal" id="f-deducCap" placeholder="5000"></div>
+    </div>
+    <div class="hint">残高・金利・残年数から年間返済額を自動計算します。控除情報（年0.7%）は「繰上返済 vs 物件購入」判定に使用。控除終了済みなら残り年数0。上限は入居年・住宅区分により3000〜5000万円。</div>
   </div>
   <div class="card">
     <h2>📉 その他の借入（任意）</h2>
@@ -478,7 +482,8 @@ function applyBank(){
 /* ================= 財務プロフィール ================= */
 function saveProfile(){
   const p={ income:num('f-income'), income2:num('f-income2'), cash:num('f-cash'),
-    loan:num('f-loan'), loanRate:num('f-loanRate'), loanYears:num('f-loanYears'), otherDebt:num('f-otherDebt') };
+    loan:num('f-loan'), loanRate:num('f-loanRate'), loanYears:num('f-loanYears'), otherDebt:num('f-otherDebt'),
+    deducYears:num('f-deducYears'), deducCap:num('f-deducCap')||5000 };
   localStorage.setItem('eip_profile', JSON.stringify(p));
   renderProfileSummary(); alert('財務状況を保存しました');
 }
@@ -488,6 +493,7 @@ function loadProfileForm(){
   $('f-income').value=p.income||''; $('f-income2').value=p.income2||''; $('f-cash').value=p.cash||'';
   $('f-loan').value=p.loan||''; $('f-loanRate').value=p.loanRate||''; $('f-loanYears').value=p.loanYears||'';
   $('f-otherDebt').value=p.otherDebt||'';
+  $('f-deducYears').value=p.deducYears||''; $('f-deducCap').value=p.deducCap||'';
 }
 function profileCalc(p){
   const homeAnnual=pmt(p.loan,p.loanRate,p.loanYears)*12;
@@ -842,6 +848,34 @@ function renderTotalSim(p,c){
     <div class="hint">エリア別変動率は⚙️設定で編集可。譲渡税は減価償却の取戻し（取得費減少）を未考慮のため実際はやや重くなります。保有5年以下は短期譲渡39.63%で自動計算。</div>`;
 }
 
+/* ================= 繰上返済 vs 物件購入 ================= */
+function renderPrepayCompare(p,c,profile){
+  if(!profile||!profile.loan) return '';
+  const t=totalSim(p,c);
+  const X=Math.min(t.invested, profile.loan);          // 物件に投じる自己資金と同額を繰上返済に回す想定
+  if(X<=0) return '';
+  const holdY=t.holdY;
+  const rm=profile.loanRate/100/12;
+  // 期間短縮型繰上返済：X万円が住宅ローン金利で複利運用されるのと等価（保有期間内の利息軽減効果）
+  const intSaved=X*(Math.pow(1+rm,Math.min(holdY,profile.loanYears)*12)-1);
+  // 失う住宅ローン控除：残高が上限以下なら繰上分×0.7%×控除残年数（保有期間と控除残の短い方）
+  const dy=Math.min(profile.deducYears||0, holdY);
+  const capRoom=Math.max(0, Math.min(profile.loan, profile.deducCap||5000));
+  const lostDeduc=(capRoom>0 && dy>0)? Math.min(X,capRoom)*0.007*dy : 0;
+  const netA=intSaved-lostDeduc;
+  const netB=t.total;
+  const diff=netB-netA;
+  const better=diff>=0? '物件購入' : '繰上返済';
+  const bB=diff>=0? 'b-ok':'b-warn';
+  return `<h3>💡 資金振り分け判定：繰上返済 vs この物件（同額 ${fmt(X,0)}万円・${holdY}年）</h3>
+    <div class="metric"><span>A案：繰上返済の利息軽減（金利${profile.loanRate}%・期間短縮型）</span><b>+${fmt(intSaved,0)} 万円</b></div>
+    ${lostDeduc>0?`<div class="metric"><span>　− 失う住宅ローン控除（0.7%×残${dy}年）</span><b>−${fmt(lostDeduc,0)} 万円</b></div>`:''}
+    <div class="metric"><span>A案 正味効果（無リスク）</span><b>${netA>=0?'+':'−'}${fmt(Math.abs(netA),0)} 万円</b></div>
+    <div class="metric"><span>B案：この物件のトータル損益（リスクあり）</span><b style="color:${netB>=0?'var(--green)':'var(--red)'}">${netB>=0?'+':'−'}${fmt(Math.abs(netB),0)} 万円</b></div>
+    <div class="metric"><span><b>有利な選択</b></span><b><span class="badge ${bB}">${better}（差 ${fmt(Math.abs(diff),0)}万円）</span></b></div>
+    <div class="hint">${(profile.deducYears||0)>0? '⚠️ 住宅ローン控除期間中（0.7%）は金利'+profile.loanRate+'%との逆ザヤのため、控除終了までは繰上返済しないのが定石。':''}A案は確定効果・B案は空室/価格変動リスクを伴います。差が小さい場合は無リスクのA案（または現金温存）が合理的です。</div>`;
+}
+
 /* ================= 判定タブ描画 ================= */
 function renderResult(){
   const props=getProps(); const profile=getProfile(); const el=$('r-body');
@@ -879,6 +913,7 @@ function renderResult(){
       ${renderBankCompare(p)}
       ${c.fin? renderFin(c):''}
       ${renderTotalSim(p,c)}
+      ${renderPrepayCompare(p,c,profile)}
       ${renderExit(p)}
       ${renderAction(c,p,profile)}
       <div class="prop-actions">
