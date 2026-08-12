@@ -1,0 +1,15 @@
+{
+  "name": "負けない不動産投資プランナー",
+  "short_name": "EstateInvest",
+  "description": "港区Aクラス中古1K〜1LDK戦略の実質利回り計算・5条件チェック・融資判定シミュレーター",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0d1626",
+  "theme_color": "#1a2b4a",
+  "orientation": "portrait",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"},
+    {"src": "icon-180.png", "sizes": "180x180", "type": "image/png"}
+  ]
+}
